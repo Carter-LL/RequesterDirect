@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "1dJfD1628DM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\G\\source\\repos\\Github\\RequesterDirect\\RequesterDirect\\RequesterLib\\RequesterLib.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\G\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.1.303\\monogame.framework.desktopgl.3.8.1.303.nupkg.sha512"
+  ],
+  "logs": []
+}
