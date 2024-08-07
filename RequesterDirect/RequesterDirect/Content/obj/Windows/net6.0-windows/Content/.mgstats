@@ -1,1 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/G/source/repos/Github/RequesterDirect/RequesterDirect/RequesterDirect/Content/File.spritefont","C:/Users/G/source/repos/Github/RequesterDirect/RequesterDirect/RequesterDirect/Content/bin/Windows/Content/Arial.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21535,0.218435
+"C:/Users/G/source/repos/Github/RequesterDirect/RequesterDirect/RequesterDirect/Content/GaussianBlur.fx","C:/Users/G/source/repos/Github/RequesterDirect/RequesterDirect/RequesterDirect/Content/bin/Windows/Content/GaussianBlur.xnb","EffectProcessor","CompiledEffectContent",1329,2507,0.4329534

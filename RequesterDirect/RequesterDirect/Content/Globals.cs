@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using RequesterDirect.Content.Effects;
+﻿using RequesterDirect.Content.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace RequesterDirect.Content
 {
-    public static class Textures
+    public class Globals
     {
-        public static Texture2D whitePixel;
+        public static List<Frame> Frames = new List<Frame>();
     }
 }
