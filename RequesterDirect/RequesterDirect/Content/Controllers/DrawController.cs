@@ -20,14 +20,15 @@ namespace RequesterDirect.Content.Controllers
 
         public void Draw()
         {
-            _spriteBatch.Begin();
-
             foreach(Frame frame in Globals.Frames)
             {
                 frame.Draw(_spriteBatch);
             }
+        }
 
-            _spriteBatch.End();
+        public SpriteBatch GetSpriteBatch()
+        {
+            return _spriteBatch;
         }
     }
 }

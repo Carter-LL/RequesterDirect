@@ -20,9 +20,15 @@ namespace RequesterDirect.Content.Controllers
             data[0] = Color.White; // or any color you prefer
             Textures.whitePixel.SetData(data);
 
+            //Make fonts
+            Globals.Fonts.Add("Arial Bold", content.Load<SpriteFont>("Arial Bold")); // Exclude the .xnb extension
+            Globals.Fonts.Add("Arial", content.Load<SpriteFont>("Arial")); // Exclude the .xnb extension
+
+
             Window frame = new Window(content);
             frame.SetBackColor(Color.FromNonPremultiplied(45, 45, 45, 255));
-            frame.SetActiveToolbarColor(Color.FromNonPremultiplied(94, 88, 84, 255));
+            frame.SetActiveTitlebarColor(Color.FromNonPremultiplied(94, 88, 84, 255));
+            frame.SetTitleColor(Color.DarkGray);
 
             Globals.Frames.Add(frame);
         }

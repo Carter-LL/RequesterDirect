@@ -23,28 +23,47 @@ namespace RequesterDirect.Content.Controls
         private Size Size { get; set; } = new Size(100, 50);
         private Color BackColor { get; set; } = Color.Gray;
 
-        private bool _isDragging;
+        private bool _isDragging = false;
+        private bool _isActive = false;
         private bool _draggable = true;
         private bool _invokeDrag = false;
         private MouseState _previousMouseState;
         private Rectangle _baseRectangle;
         private Point _dragOffset;
 
-        private SpriteFont _fontArial;
-
         public Frame(ContentManager content) 
         {
-            _fontArial = content.Load<SpriteFont>("Arial");
             _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
-            _isDragging = false;
             _previousMouseState = Mouse.GetState();
         }
 
         public virtual void Update()
         {
-            #region Mouse Dragging
+            
             MouseState mouseState = Mouse.GetState();
             Point mouseLocation = mouseState.Position;
+
+            #region Check is active
+            if (_baseRectangle.Contains(mouseLocation))
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    _isActive = true;
+                }
+            } 
+            else
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (!_baseRectangle.Contains(mouseLocation))
+                    {
+                        _isActive = false;
+                    }
+                }
+            }
+            #endregion
+
+            #region Mouse Dragging
 
             if (_baseRectangle.Contains(mouseLocation) && _draggable || _invokeDrag)
             {
@@ -93,9 +112,9 @@ namespace RequesterDirect.Content.Controls
             _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
         }
 
-        public Point GetLocation()
+        public void SetBackColor(Color color)
         {
-            return Location;
+            BackColor = color;
         }
 
         public void SetSize(Size size)
@@ -104,14 +123,19 @@ namespace RequesterDirect.Content.Controls
             _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
         }
 
+        public void SetDraggable(bool status)
+        {
+            _draggable = status;
+        }
+
+        public Point GetLocation()
+        {
+            return Location;
+        }
+
         public Size GetSize()
         {
             return Size;
-        }
-
-        public void SetBackColor(Color color) 
-        {
-            BackColor = color;
         }
 
         public Rectangle GetBounds()
@@ -119,14 +143,14 @@ namespace RequesterDirect.Content.Controls
             return _baseRectangle;
         }
 
+        public bool GetActive()
+        {
+            return _isActive;
+        }
+
         public void ToggleDrag(bool status)
         {
             _invokeDrag = status;
-        }
-
-        public void SetDraggable(bool status)
-        {
-            _draggable = status;
         }
     }
 }

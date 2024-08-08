@@ -10,6 +10,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Point = Microsoft.Xna.Framework.Point;
 using Color = Microsoft.Xna.Framework.Color;
 using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 using System.Drawing;
 using Microsoft.Xna.Framework.Input;
 
@@ -17,13 +18,13 @@ namespace RequesterDirect.Content.Controls
 {
     public class Window : Frame, FrameInterface
     {
-        private Color ToolbarColor { get; set; } = Color.White;
-        private Color ActiveToolbarColor { get; set; } = Color.Black;
+        private Color TitlebarColor { get; set; } = Color.White;
+        private Color TitleColor { get; set; } = Color.Yellow;
+        private Color ActiveTitlebarColor { get; set; } = Color.Black;
+        private string Title { get; set; } = "New Window";
 
-        private Rectangle _toolbarRectangle;
-        private int _toolbarHeight = 20;
-
-        private bool _isActive = false;
+        private Rectangle _titlebarRectangle;
+        private int _titlebarHeight = 20;
 
         public Window(ContentManager content) : base(content)
         {
@@ -36,28 +37,17 @@ namespace RequesterDirect.Content.Controls
             base.Update();
 
             #region Mouse Dragging
-            _toolbarRectangle = new Rectangle(base.GetLocation().X, base.GetLocation().Y, base.GetSize().Width, _toolbarHeight);
+            _titlebarRectangle = new Rectangle(base.GetLocation().X, base.GetLocation().Y, base.GetSize().Width, _titlebarHeight);
 
             MouseState mouseState = Mouse.GetState();
             Point mouseLocation = mouseState.Position;
 
-            if (_toolbarRectangle.Contains(mouseLocation))
+            if (_titlebarRectangle.Contains(mouseLocation))
             {
                 base.ToggleDrag(true);
-                if(mouseState.LeftButton == ButtonState.Pressed)
-                {
-                    _isActive = true;
-                }
             } else
             {
                 base.ToggleDrag(false);
-                if (mouseState.LeftButton == ButtonState.Pressed)
-                {
-                    if (!base.GetBounds().Contains(mouseLocation))
-                    {
-                        _isActive = false;
-                    }
-                }
             }
             #endregion
         }
@@ -67,28 +57,61 @@ namespace RequesterDirect.Content.Controls
             base.Draw(spriteBatch);
 
             //Toolbar
-            if (_isActive)
+            if (base.GetActive())
             {
-                Drawing.Rectangle(spriteBatch, _toolbarRectangle, ActiveToolbarColor);
+                Drawing.Rectangle(spriteBatch, _titlebarRectangle, ActiveTitlebarColor);
             } 
             else
             {
-                Drawing.Rectangle(spriteBatch, _toolbarRectangle, ToolbarColor);
+                Drawing.Rectangle(spriteBatch, _titlebarRectangle, TitlebarColor);
             }
-            Drawing.OutlinedRectangle(spriteBatch, _toolbarRectangle, Color.Black, 1);
+            Drawing.OutlinedRectangle(spriteBatch, _titlebarRectangle, Color.Black, 1);
+
+            //Title
+            Drawing.String(spriteBatch, Globals.Fonts["Arial Bold"], new Vector2(_titlebarRectangle.X + 5, _titlebarRectangle.Top + 2), TitleColor, "New Window");
 
             //Main frame border
             Drawing.OutlinedRectangle(spriteBatch, base.GetBounds(), Color.Black, 1);
         }
 
-        public bool GetActive()
+        public void SetActiveTitlebarColor(Color color)
         {
-            return _isActive;
+            ActiveTitlebarColor = color;
         }
 
-        public void SetActiveToolbarColor(Color color)
+        public void SetTitlebarColor(Color color)
         {
-            ActiveToolbarColor = color;
+            TitlebarColor = color;
+        }
+
+        public void SetTitle(string title)
+        {
+            Title = title;
+        }
+
+        public void SetTitleColor(Color color)
+        {
+            TitleColor = color;
+        }
+
+        public Color GetActiveTitlebarColor()
+        {
+            return ActiveTitlebarColor;
+        }
+
+        public Color GetTitlebarColor()
+        {
+            return TitlebarColor;
+        }
+
+        public string GetTitle()
+        {
+            return Title;
+        }
+
+        public Color GetTitleColor()
+        {
+            return TitleColor;
         }
     }
 }
