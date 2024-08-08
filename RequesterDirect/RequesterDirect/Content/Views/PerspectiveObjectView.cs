@@ -30,6 +30,7 @@ namespace RequesterDirect.Content.Views
                     Point mouseLocation = mouseState.Position;
                     foreach(Frame frame in Globals.Frames)
                     {
+                        if(frame.GetType() == typeof(Frame)) { return; }
                         if (!_isDragging)
                         {
                             // Start dragging

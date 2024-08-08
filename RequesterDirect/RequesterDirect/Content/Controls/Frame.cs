@@ -25,11 +25,12 @@ namespace RequesterDirect.Content.Controls
 
         private bool _isDragging = false;
         private bool _isActive = false;
-        private bool _draggable = true;
+        private bool _draggable = false;
         private bool _invokeDrag = false;
         private MouseState _previousMouseState;
         private Rectangle _baseRectangle;
         private Point _dragOffset;
+        private Frame _followFrame;
 
         public Frame(ContentManager content) 
         {
@@ -39,7 +40,6 @@ namespace RequesterDirect.Content.Controls
 
         public virtual void Update()
         {
-            
             MouseState mouseState = Mouse.GetState();
             Point mouseLocation = mouseState.Position;
 
@@ -95,10 +95,17 @@ namespace RequesterDirect.Content.Controls
                     _isDragging = false;
                 }
             }
-
-            _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
             _previousMouseState = mouseState;
             #endregion
+
+            if (_followFrame != null)
+            {
+                _baseRectangle = new Rectangle(_followFrame.GetLocation().X + Location.X, _followFrame.GetLocation().Y + Location.Y, Size.Width, Size.Height);
+            }
+            else
+            {
+                _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
+            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
@@ -151,6 +158,11 @@ namespace RequesterDirect.Content.Controls
         public void ToggleDrag(bool status)
         {
             _invokeDrag = status;
+        }
+
+        public void Follow(Frame frame)
+        {
+            _followFrame = frame;
         }
     }
 }

@@ -43,6 +43,7 @@ namespace RequesterDirect
         {
             int windowWidth = GraphicsDevice.DisplayMode.Width / 2;
             int windowHeight = GraphicsDevice.DisplayMode.Height / 2;
+            Globals.WindowSize = new Size(windowWidth, windowHeight);
 
             // Setup frame buffer.
 
@@ -81,15 +82,14 @@ namespace RequesterDirect
 
         protected override void Update(GameTime gameTime)
         {
+            if(!IsActive) { return; }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if(IsActive)
-            {
-                _updateController.Update();
-                _perspective.Update();
-            }
+            _updateController.Update();
+            _perspective.Update();
 
+            #region FPS
             _elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
             _frameCount++;
 
@@ -100,19 +100,23 @@ namespace RequesterDirect
                 _elapsedTime = 0;
                 _frameCount = 0;
             }
+            #endregion
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            if (!IsActive) { return; }
+
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Color.FromNonPremultiplied(178, 178, 178, 255));
 
             _drawController.GetSpriteBatch().Begin();
 
+            //Main Draw
             _drawController.Draw();
-            Drawing.String(_drawController.GetSpriteBatch(), Globals.Fonts["Arial Bold"], new Vector2(10, 10), Color.Red, _fpsText);
+            Drawing.String(_drawController.GetSpriteBatch(), Globals.Fonts["Arial Bold"], new Vector2(10, 50), Color.Red, _fpsText);
 
             _drawController.GetSpriteBatch().End();
 

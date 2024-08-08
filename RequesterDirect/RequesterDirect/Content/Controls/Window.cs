@@ -19,8 +19,8 @@ namespace RequesterDirect.Content.Controls
     public class Window : Frame, FrameInterface
     {
         private Color TitlebarColor { get; set; } = Color.White;
-        private Color TitleColor { get; set; } = Color.Yellow;
-        private Color ActiveTitlebarColor { get; set; } = Color.Black;
+        private Color TitleColor { get; set; } = Color.DarkGray;
+        private Color ActiveTitlebarColor { get; set; } = Color.FromNonPremultiplied(94, 88, 84, 255);
         private string Title { get; set; } = "New Window";
 
         private Rectangle _titlebarRectangle;
@@ -28,6 +28,7 @@ namespace RequesterDirect.Content.Controls
 
         public Window(ContentManager content) : base(content)
         {
+            base.SetBackColor(Color.FromNonPremultiplied(45, 45, 45, 255));
             base.SetSize(new Size(200, 250));
             base.SetDraggable(false);
         }
