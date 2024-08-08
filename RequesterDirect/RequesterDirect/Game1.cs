@@ -100,6 +100,16 @@ namespace RequesterDirect
                 _elapsedTime = 0;
                 _frameCount = 0;
             }
+
+            if (!Globals.DebugLabels.ContainsKey("fps"))
+            {
+                Globals.DebugLabels.Add("fps", _fpsText);
+            } 
+            else
+            {
+                Globals.DebugLabels["fps"] = _fpsText;
+            }
+
             #endregion
 
             base.Update(gameTime);
@@ -116,7 +126,14 @@ namespace RequesterDirect
 
             //Main Draw
             _drawController.Draw();
-            Drawing.String(_drawController.GetSpriteBatch(), Globals.Fonts["Arial Bold"], new Vector2(10, 50), Color.Red, _fpsText);
+
+            //Draw debugging labels
+            int offsety = 0;
+            foreach (string value in Globals.DebugLabels.Values)
+            {
+                Drawing.String(_drawController.GetSpriteBatch(), Globals.Fonts["Arial Bold"], new Vector2(10, 50 + offsety), Color.Red, value);
+                offsety += 15;
+            }
 
             _drawController.GetSpriteBatch().End();
 

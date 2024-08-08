@@ -14,5 +14,6 @@ namespace RequesterDirect.Content
         public static List<Frame> Frames = new();
         public static Dictionary<string, SpriteFont> Fonts = new();
         public static Size WindowSize {  get; set; }
+        public static Dictionary<string, string> DebugLabels = new();
     }
 }

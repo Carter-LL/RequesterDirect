@@ -27,7 +27,6 @@ namespace RequesterDirect.Content.Controls
         private bool _isActive = false;
         private bool _draggable = false;
         private bool _invokeDrag = false;
-        private MouseState _previousMouseState;
         private Rectangle _baseRectangle;
         private Point _dragOffset;
         private Frame _followFrame;
@@ -35,11 +34,19 @@ namespace RequesterDirect.Content.Controls
         public Frame(ContentManager content) 
         {
             _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
-            _previousMouseState = Mouse.GetState();
         }
 
         public virtual void Update()
         {
+            if (!Globals.DebugLabels.ContainsKey(GetHashCode().ToString()))
+            {
+                Globals.DebugLabels.Add(GetHashCode().ToString(), $"{GetHashCode().ToString()} Frame Dragging: {_isDragging}");
+            }
+            else
+            {
+                Globals.DebugLabels[GetHashCode().ToString()] = $"{GetHashCode().ToString()} Frame Dragging: {_isDragging}";
+            }
+
             MouseState mouseState = Mouse.GetState();
             Point mouseLocation = mouseState.Position;
 
@@ -95,7 +102,7 @@ namespace RequesterDirect.Content.Controls
                     _isDragging = false;
                 }
             }
-            _previousMouseState = mouseState;
+
             #endregion
 
             if (_followFrame != null)
@@ -155,7 +162,7 @@ namespace RequesterDirect.Content.Controls
             return _isActive;
         }
 
-        public void ToggleDrag(bool status)
+        public void InvokeDrag(bool status)
         {
             _invokeDrag = status;
         }

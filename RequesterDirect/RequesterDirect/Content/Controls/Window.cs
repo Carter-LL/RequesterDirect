@@ -45,10 +45,10 @@ namespace RequesterDirect.Content.Controls
 
             if (_titlebarRectangle.Contains(mouseLocation))
             {
-                base.ToggleDrag(true);
+                base.InvokeDrag(true);
             } else
             {
-                base.ToggleDrag(false);
+                base.InvokeDrag(false);
             }
             #endregion
         }

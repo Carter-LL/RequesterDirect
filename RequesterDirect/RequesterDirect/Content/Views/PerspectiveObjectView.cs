@@ -20,17 +20,31 @@ namespace RequesterDirect.Content.Views
 
         public void Update()
         {
+            if (!Globals.DebugLabels.ContainsKey("perspective"))
+            {
+                Globals.DebugLabels.Add("perspective", $"Perspective Dragging: {_isDragging}");
+            }
+            else
+            {
+                Globals.DebugLabels["perspective"] = $"Perspective Dragging: {_isDragging}";
+            }
             MouseState mouseState = Mouse.GetState();
+            Point mouseLocation = mouseState.Position;
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
+                //Check if dragging over frames. we only want to drag if the mouse is in empty space
+                if (Globals.Frames.Any(frame => frame.GetBounds().Contains(mouseLocation)))
+                {
+                    return;
+                }
+
+                //Make sure no frames are set active
                 if (!Globals.Frames.TrueForAll(x => x.GetActive()))
                 {
-
-                    Point mouseLocation = mouseState.Position;
                     foreach(Frame frame in Globals.Frames)
                     {
-                        if(frame.GetType() == typeof(Frame)) { return; }
+                        if (frame.GetType() != typeof(Window)) { return; }
                         if (!_isDragging)
                         {
                             // Start dragging
