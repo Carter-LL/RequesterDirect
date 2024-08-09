@@ -31,7 +31,7 @@ namespace RequesterDirect.Content.Controls
         private Point _dragOffset;
         private Frame _followFrame;
 
-        public Frame(ContentManager content) 
+        public Frame() 
         {
             _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
         }
@@ -134,7 +134,7 @@ namespace RequesterDirect.Content.Controls
         public void SetSize(Size size)
         {
             Size = size;
-            _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
+            _baseRectangle = new Rectangle(_baseRectangle.X, _baseRectangle.Y, Size.Width, Size.Height);
         }
 
         public void SetDraggable(bool status)
@@ -144,7 +144,7 @@ namespace RequesterDirect.Content.Controls
 
         public Point GetLocation()
         {
-            return Location;
+            return new Point(_baseRectangle.X, _baseRectangle.Y);
         }
 
         public Size GetSize()
@@ -167,7 +167,7 @@ namespace RequesterDirect.Content.Controls
             _invokeDrag = status;
         }
 
-        public void Follow(Frame frame)
+        public virtual void Follow(Frame frame)
         {
             _followFrame = frame;
         }

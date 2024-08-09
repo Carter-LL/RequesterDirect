@@ -16,13 +16,16 @@ namespace RequesterDirect.Content.Controls
 {
     public class Button : Frame, FrameInterface
     {
+        public event EventHandler<Point> Click;
+
         private Color TextColor { get; set; } = Color.White;
         private Color HoverColor { get; set; } = Color.FromNonPremultiplied(45, 45, 45, 255);
         private string Text { get; set; } = "Button";
 
         private bool _hovering = false;
+        private bool _mouseDown = false;
 
-        public Button(ContentManager content) : base(content)
+        public Button()
         {
             base.SetBackColor(Color.FromNonPremultiplied(94, 88, 84, 255));
             base.SetSize(new Size(80, 30));
@@ -32,13 +35,30 @@ namespace RequesterDirect.Content.Controls
         {
             base.Update();
 
+            #region Mouse click & hover
             MouseState mouseState = Mouse.GetState();
             Point mouseLocation = mouseState.Position;
 
             if (base.GetBounds().Contains(mouseLocation))
             {
-                _hovering = true;
+                if(mouseState.LeftButton == ButtonState.Released && _mouseDown)
+                {
+                    Click?.Invoke(this, mouseLocation);
+                    _mouseDown = false;
+                    _hovering = true;
+                }
+
+                if(mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    _mouseDown = true;
+                    _hovering = false;
+                } 
+                else
+                {
+                    _hovering = true;
+                }
             } else { _hovering = false; }
+            #endregion
         }
 
         public override void Draw(SpriteBatch spriteBatch)

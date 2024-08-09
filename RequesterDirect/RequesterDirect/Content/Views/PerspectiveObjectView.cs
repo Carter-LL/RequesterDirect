@@ -28,6 +28,7 @@ namespace RequesterDirect.Content.Views
             {
                 Globals.DebugLabels["perspective"] = $"Perspective Dragging: {_isDragging}";
             }
+
             MouseState mouseState = Mouse.GetState();
             Point mouseLocation = mouseState.Position;
 
@@ -56,13 +57,14 @@ namespace RequesterDirect.Content.Views
 
                         // Update the location to follow the mouse, maintaining the offset
                         frame.SetLocation(new Point(mouseLocation.X - _dragOffset.X, mouseLocation.Y - _dragOffset.Y));
-                        //_baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
                     }
-                } else
+                } 
+                else
                 {
                     _isDragging = false;
                 }
-            } else
+            } 
+            else
             {
                 _isDragging = false;
             }

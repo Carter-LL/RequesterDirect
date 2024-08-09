@@ -29,16 +29,22 @@ namespace RequesterDirect.Content.Controllers
 
 
             //Test object
-            Window test_frame = new Window(content);
-            test_frame.SetLocation(new Point(50, 300));
-            Globals.Frames.Add(test_frame);
+            Window test_window = new Window();
+            test_window.SetLocation(new Point(50, 300));
+            Globals.Frames.Add(test_window);
 
-            Frame frame = new Frame(content);
+            Label label = new Label();
+            label.SetLocation(new Point(label.GetLocation().X + 1, label.GetLocation().Y + 20));
+            label.SetSize(new Size(test_window.GetSize().Width - 2, label.GetSize().Height));
+            label.Follow(test_window);
+            Globals.Frames.Add(label);
+
+            Frame frame = new Frame();
             frame.SetLocation(new Point(0, 0));
             frame.SetSize(new Size(Globals.WindowSize.Width, 30));
             Globals.Frames.Add(frame);
 
-            Button button = new Button(content);
+            Button button = new Button();
             button.Follow(frame);
             Globals.Frames.Add(button);
         }

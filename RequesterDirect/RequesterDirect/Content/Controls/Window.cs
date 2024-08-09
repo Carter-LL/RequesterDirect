@@ -26,7 +26,7 @@ namespace RequesterDirect.Content.Controls
         private Rectangle _titlebarRectangle;
         private int _titlebarHeight = 20;
 
-        public Window(ContentManager content) : base(content)
+        public Window()
         {
             base.SetBackColor(Color.FromNonPremultiplied(45, 45, 45, 255));
             base.SetSize(new Size(200, 250));
@@ -113,6 +113,11 @@ namespace RequesterDirect.Content.Controls
         public Color GetTitleColor()
         {
             return TitleColor;
+        }
+
+        public override void Follow(Frame frame)
+        {
+            base.Follow(frame);
         }
     }
 }
