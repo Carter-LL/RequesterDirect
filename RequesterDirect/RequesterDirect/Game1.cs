@@ -3,10 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RequesterDirect.Content;
 using RequesterDirect.Content.Controllers;
+using RequesterDirect.Content.Models;
 using RequesterDirect.Content.Views;
 using SharpDX.Direct2D1;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using Color = Microsoft.Xna.Framework.Color;
 using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
 
@@ -29,14 +33,51 @@ namespace RequesterDirect
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.DeviceReset += OnResize;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            _graphics.IsFullScreen = false;
+            Window.AllowUserResizing = true;
 
             // Disable V-Sync
             _graphics.SynchronizeWithVerticalRetrace = false;
 
             // Optional: Set IsFixedTimeStep to false for more control over update timing
             IsFixedTimeStep = false;
+
+            //Load Libraries
+            foreach(string path in Directory.GetFiles(@"libs\\"))
+            {
+                if (path.ToLower().EndsWith(".dll") && path.ToLower().Contains("addon_"))
+                {
+                    try
+                    {
+                        FileInfo info = new FileInfo(path);
+                        Assembly assembly = Assembly.LoadFrom(path);
+
+                        Type type = assembly.GetType($"{info.Name.Split(".dll")[0].Replace("addon_", "")}.Main");
+
+                        // Create an instance of the type
+                        object instance = Activator.CreateInstance(type);
+
+                        // Invoke a method on the instance
+                        MethodInfo method = type.GetMethod("LibraryLoad");
+                        method.Invoke(instance, null);
+
+                        Console.WriteLine($"Loaded Addon: {info.Name}");
+
+                        Globals.LoadedAssemblies.Add(new()
+                        {
+                            Name = info.Name.Replace("addon_", ""),
+                            type = type,
+                            instance = instance
+                        });
+                    }catch(Exception e)
+                    {
+                        Console.WriteLine($"Failed to load Addon: {path}");
+                    }
+                }
+            }
         }
 
         protected override void Initialize()
@@ -47,7 +88,7 @@ namespace RequesterDirect
 
             // Setup frame buffer.
 
-            _graphics.SynchronizeWithVerticalRetrace = false;
+            _graphics.SynchronizeWithVerticalRetrace = true;
             _graphics.PreferredBackBufferWidth = windowWidth;
             _graphics.PreferredBackBufferHeight = windowHeight;
             _graphics.ApplyChanges();
@@ -55,9 +96,39 @@ namespace RequesterDirect
             base.Initialize();
         }
 
+        public void OnResize(Object sender, EventArgs e)
+        {
+            // Create the render target
+            _renderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height,
+                false,
+                SurfaceFormat.Color,
+                DepthFormat.None
+            );
+
+            if ((_graphics.PreferredBackBufferWidth != _graphics.GraphicsDevice.Viewport.Width) ||
+                (_graphics.PreferredBackBufferHeight != _graphics.GraphicsDevice.Viewport.Height))
+            {
+                _graphics.PreferredBackBufferWidth = _graphics.GraphicsDevice.Viewport.Width;
+                _graphics.PreferredBackBufferHeight = _graphics.GraphicsDevice.Viewport.Height;
+                _graphics.ApplyChanges();
+
+            }
+
+            int windowWidth = GraphicsDevice.Viewport.Width;
+            int windowHeight = GraphicsDevice.Viewport.Height;
+            Globals.WindowSize = new Size(windowWidth, windowHeight);
+            LoadContent();
+        }
+
         protected override void LoadContent()
         {
             base.LoadContent();
+            Globals.Frames = new();
+            Globals.Fonts = new();
+            Globals.DebugLabels = new();
             _drawController = new(new SpriteBatch(GraphicsDevice));
             _contentController = new(GraphicsDevice, Content);
             _updateController = new();
@@ -72,6 +143,21 @@ namespace RequesterDirect
                 SurfaceFormat.Color,
                 DepthFormat.None
             );
+
+            //Run Library functions
+            foreach (LibraryModel library in Globals.LoadedAssemblies)
+            {
+                try
+                {
+                    // Invoke a method on the instance
+                    MethodInfo method = library.type.GetMethod("LoadContent");
+                    method.Invoke(library.instance, null);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Unable to execute LoadContent function in Library");
+                }
+            }
         }
 
         protected override void UnloadContent()
@@ -112,6 +198,18 @@ namespace RequesterDirect
 
             #endregion
 
+            //Run Library functions
+            foreach (LibraryModel library in Globals.LoadedAssemblies)
+            {
+                try
+                {
+                    // Invoke a method on the instance
+                    MethodInfo method = library.type.GetMethod("Update");
+                    method.Invoke(library.instance, null);
+                }
+                catch (Exception ex) { }
+            }
+
             base.Update(gameTime);
         }
 
@@ -133,6 +231,17 @@ namespace RequesterDirect
             {
                 Drawing.String(_drawController.GetSpriteBatch(), Globals.Fonts["Arial Bold"], new Vector2(10, 50 + offsety), Color.Red, value);
                 offsety += 15;
+            }
+
+            //Run Library functions
+            foreach (LibraryModel library in Globals.LoadedAssemblies)
+            {
+                try
+                {
+                    // Invoke a method on the instance
+                    MethodInfo method = library.type.GetMethod("Draw");
+                    method.Invoke(library.instance, null);
+                }catch(Exception ex) { }
             }
 
             _drawController.GetSpriteBatch().End();

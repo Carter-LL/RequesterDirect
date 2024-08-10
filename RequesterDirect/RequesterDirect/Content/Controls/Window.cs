@@ -26,16 +26,18 @@ namespace RequesterDirect.Content.Controls
         private Rectangle _titlebarRectangle;
         private int _titlebarHeight = 20;
 
-        public Window()
+        public Window(string name) : base(name)
         {
             base.SetBackColor(Color.FromNonPremultiplied(45, 45, 45, 255));
             base.SetSize(new Size(200, 250));
             base.SetDraggable(false);
+            base.SetTopLevel(1);
         }
 
         public override void Update()
         {
             base.Update();
+            if (!isViewable()) { return; }
 
             #region Mouse Dragging
             _titlebarRectangle = new Rectangle(base.GetLocation().X, base.GetLocation().Y, base.GetSize().Width, _titlebarHeight);
@@ -56,6 +58,7 @@ namespace RequesterDirect.Content.Controls
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+            if (!isViewable()) { return; }
 
             //Toolbar
             if (base.GetActive())
@@ -69,7 +72,7 @@ namespace RequesterDirect.Content.Controls
             Drawing.OutlinedRectangle(spriteBatch, _titlebarRectangle, Color.Black, 1);
 
             //Title
-            Drawing.String(spriteBatch, Globals.Fonts["Arial Bold"], new Vector2(_titlebarRectangle.X + 5, _titlebarRectangle.Top + 2), TitleColor, "New Window");
+            Drawing.String(spriteBatch, Globals.Fonts["Arial Bold"], new Vector2(_titlebarRectangle.X + 5, _titlebarRectangle.Top + 2), TitleColor, Title);
 
             //Main frame border
             Drawing.OutlinedRectangle(spriteBatch, base.GetBounds(), Color.Black, 1);
@@ -118,6 +121,22 @@ namespace RequesterDirect.Content.Controls
         public override void Follow(Frame frame)
         {
             base.Follow(frame);
+        }
+
+        public void FullScreen()
+        {
+            SetSize(Globals.WindowSize);
+            SetTopLevel(-100);
+            SetLocation(new Point(0, 0));
+            List<Frame> frames = Globals.Frames.FindAll(x => x.GetFollow() != null);
+            foreach (Frame frame in frames)
+            {
+                if (frame.GetFollow().GetHashCode().Equals(this.GetHashCode()))
+                {
+                    frame.SetTopLevel(-101);
+                }
+            }
+            Globals.Frames.UpdateSort();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using RequesterDirect.Content.Controls;
+﻿using Microsoft.Xna.Framework;
+using RequesterDirect.Content.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace RequesterDirect.Content.Controllers
 
         public void Update()
         {
-            foreach (Frame frame in Globals.Frames)
+            var framesCopy = new List<Frame>(Globals.Frames); // Create a copy of the collection
+            foreach (Frame frame in framesCopy)
             {
                 frame.Update();
             }

@@ -22,22 +22,30 @@ namespace RequesterDirect.Content.Controls
         private Point Location { get; set; } = new Point(0, 0);
         private Size Size { get; set; } = new Size(100, 50);
         private Color BackColor { get; set; } = Color.Gray;
+        private string Name { get; set; }
 
+        private bool _visible = true;
         private bool _isDragging = false;
         private bool _isActive = false;
         private bool _draggable = false;
         private bool _invokeDrag = false;
         private Rectangle _baseRectangle;
         private Point _dragOffset;
+        private int _toplevel = 0;
         private Frame _followFrame;
+        private Dictionary<string, object> _runtimeData = new();
 
-        public Frame() 
+        public Frame(string name) 
         {
             _baseRectangle = new Rectangle(Location.X, Location.Y, Size.Width, Size.Height);
+            Name = name;
         }
 
         public virtual void Update()
         {
+            if (!GetVisible()) { return; }
+
+            /*
             if (!Globals.DebugLabels.ContainsKey(GetHashCode().ToString()))
             {
                 Globals.DebugLabels.Add(GetHashCode().ToString(), $"{GetHashCode().ToString()} Frame Dragging: {_isDragging}");
@@ -45,7 +53,7 @@ namespace RequesterDirect.Content.Controls
             else
             {
                 Globals.DebugLabels[GetHashCode().ToString()] = $"{GetHashCode().ToString()} Frame Dragging: {_isDragging}";
-            }
+            }*/
 
             MouseState mouseState = Mouse.GetState();
             Point mouseLocation = mouseState.Position;
@@ -108,6 +116,7 @@ namespace RequesterDirect.Content.Controls
             if (_followFrame != null)
             {
                 _baseRectangle = new Rectangle(_followFrame.GetLocation().X + Location.X, _followFrame.GetLocation().Y + Location.Y, Size.Width, Size.Height);
+                _toplevel = _followFrame._toplevel;
             }
             else
             {
@@ -117,7 +126,25 @@ namespace RequesterDirect.Content.Controls
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
+            if(!_visible) { return; }
+            if(_followFrame != null)
+            {
+                if (!_followFrame.GetVisible())
+                {
+                    return;
+                }
+            }
             Drawing.Rectangle(spriteBatch, _baseRectangle, BackColor);
+        }
+
+        public void SetTopLevel(int index)
+        {
+            _toplevel = index;
+        }
+
+        public void SetVisible(bool visible)
+        {
+            _visible = visible;
         }
 
         public void SetLocation(Point location)
@@ -142,6 +169,11 @@ namespace RequesterDirect.Content.Controls
             _draggable = status;
         }
 
+        public void SetObjectInRuntimeData(string key, object obj)
+        {
+            _runtimeData[key] = obj;
+        }
+
         public Point GetLocation()
         {
             return new Point(_baseRectangle.X, _baseRectangle.Y);
@@ -162,6 +194,34 @@ namespace RequesterDirect.Content.Controls
             return _isActive;
         }
 
+        public object GetObjectFromRuntimeData(string key)
+        {
+            if (_runtimeData.ContainsKey(key))
+            {
+                return _runtimeData[key];
+            } else { return null; }
+        }
+
+        public bool GetVisible()
+        {
+            return _visible;
+        }
+
+        public string GetName()
+        {
+            return Name;
+        }
+
+        public int GetTopLevel()
+        {
+            return _toplevel;
+        }
+
+        public Frame GetFollow()
+        {
+            return _followFrame;
+        }
+
         public void InvokeDrag(bool status)
         {
             _invokeDrag = status;
@@ -170,6 +230,30 @@ namespace RequesterDirect.Content.Controls
         public virtual void Follow(Frame frame)
         {
             _followFrame = frame;
+        }
+
+        public void AddObjetToRuntimeData(string key, object obj)
+        {
+            _runtimeData.Add(key, obj);
+        }
+
+        public bool isViewable()
+        {
+            bool result = true;
+            if (!GetVisible())
+            {
+                result = false;
+            }
+
+            if (_followFrame != null)
+            {
+                if (!_followFrame.GetVisible())
+                {
+                    result = false;
+                }
+            }
+
+            return result;
         }
     }
 }

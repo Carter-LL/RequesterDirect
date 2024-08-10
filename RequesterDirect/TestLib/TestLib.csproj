@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	<OutputPath>C:\Users\G\source\repos\Github\RequesterDirect\RequesterDirect\RequesterDirect\bin\Debug\net6.0-windows\libs\</OutputPath>
+	<AssemblyName>addon_$(MSBuildProjectName)</AssemblyName>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if exist &quot;$(TargetDir)$(TargetName).dll&quot; move /Y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;C:\Users\G\source\repos\Github\RequesterDirect\RequesterDirect\RequesterDirect\bin\Debug\net6.0-windows\libs\&quot;&#xD;&#xA;&#xD;&#xA;if exist &quot;$(TargetDir)net6.0\&quot; (&#xA;    rd /s /q &quot;$(TargetDir)net6.0\&quot;&#xA;)&#xA;" />
+  </Target>
+
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\RequesterDirect\bin\Debug\net6.0-windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="RequesterDirect">
+      <HintPath>..\RequesterDirect\bin\Debug\net6.0-windows\RequesterDirect.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

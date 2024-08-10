@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RequesterDirect.Content.Controls;
+using RequesterDirect.Content.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -27,26 +28,7 @@ namespace RequesterDirect.Content.Controllers
             Globals.Fonts.Add("Arial Bold", content.Load<SpriteFont>("Arial Bold")); // Exclude the .xnb extension
             Globals.Fonts.Add("Arial", content.Load<SpriteFont>("Arial")); // Exclude the .xnb extension
 
-
-            //Test object
-            Window test_window = new Window();
-            test_window.SetLocation(new Point(50, 300));
-            Globals.Frames.Add(test_window);
-
-            Label label = new Label();
-            label.SetLocation(new Point(label.GetLocation().X + 1, label.GetLocation().Y + 20));
-            label.SetSize(new Size(test_window.GetSize().Width - 2, label.GetSize().Height));
-            label.Follow(test_window);
-            Globals.Frames.Add(label);
-
-            Frame frame = new Frame();
-            frame.SetLocation(new Point(0, 0));
-            frame.SetSize(new Size(Globals.WindowSize.Width, 30));
-            Globals.Frames.Add(frame);
-
-            Button button = new Button();
-            button.Follow(frame);
-            Globals.Frames.Add(button);
+            MainToolbarUI mainToolbarUI = new();
         }
     }
 }

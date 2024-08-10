@@ -16,7 +16,7 @@ namespace RequesterDirect.Content.Controls
 {
     public class Button : Frame, FrameInterface
     {
-        public event EventHandler<Point> Click;
+        public event EventHandler<Button> Click;
 
         private Color TextColor { get; set; } = Color.White;
         private Color HoverColor { get; set; } = Color.FromNonPremultiplied(45, 45, 45, 255);
@@ -25,7 +25,7 @@ namespace RequesterDirect.Content.Controls
         private bool _hovering = false;
         private bool _mouseDown = false;
 
-        public Button()
+        public Button(string name) : base(name)
         {
             base.SetBackColor(Color.FromNonPremultiplied(94, 88, 84, 255));
             base.SetSize(new Size(80, 30));
@@ -34,6 +34,7 @@ namespace RequesterDirect.Content.Controls
         public override void Update()
         {
             base.Update();
+            if (!isViewable()) { return; }
 
             #region Mouse click & hover
             MouseState mouseState = Mouse.GetState();
@@ -43,7 +44,7 @@ namespace RequesterDirect.Content.Controls
             {
                 if(mouseState.LeftButton == ButtonState.Released && _mouseDown)
                 {
-                    Click?.Invoke(this, mouseLocation);
+                    Click?.Invoke(this, this);
                     _mouseDown = false;
                     _hovering = true;
                 }
@@ -64,6 +65,7 @@ namespace RequesterDirect.Content.Controls
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+            if (!isViewable()) { return; }
 
             if (_hovering)
             {
@@ -72,7 +74,7 @@ namespace RequesterDirect.Content.Controls
 
             //Center Text
             Vector2 textPosition = DrawingUtils.CenterTextInBounds(base.GetBounds(), Globals.Fonts["Arial"], Text);
-            Drawing.String(spriteBatch, Globals.Fonts["Arial"], textPosition, TextColor, Text);
+            Drawing.String(spriteBatch, Globals.Fonts["Arial Bold"], textPosition, TextColor, Text);
 
             //Main frame border
             Drawing.OutlinedRectangle(spriteBatch, base.GetBounds(), Color.Black, 1);
