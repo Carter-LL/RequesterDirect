@@ -95,11 +95,10 @@ namespace RequesterDirect.Content.UI
 
                 if(frame != null)
                 {
-                    frame.SetVisible(!frame.GetVisible());
-                } else
-                {
-                    Globals.Frames.Add(result);
+                    Globals.Frames.RemoveAll(frame);
                 }
+
+                Globals.Frames.Add(result);
             }
             catch (Exception ex)
             {

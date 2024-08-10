@@ -117,26 +117,5 @@ namespace RequesterDirect.Content.Controls
         {
             return TitleColor;
         }
-
-        public override void Follow(Frame frame)
-        {
-            base.Follow(frame);
-        }
-
-        public void FullScreen()
-        {
-            SetSize(Globals.WindowSize);
-            SetTopLevel(-100);
-            SetLocation(new Point(0, 0));
-            List<Frame> frames = Globals.Frames.FindAll(x => x.GetFollow() != null);
-            foreach (Frame frame in frames)
-            {
-                if (frame.GetFollow().GetHashCode().Equals(this.GetHashCode()))
-                {
-                    frame.SetTopLevel(-101);
-                }
-            }
-            Globals.Frames.UpdateSort();
-        }
     }
 }

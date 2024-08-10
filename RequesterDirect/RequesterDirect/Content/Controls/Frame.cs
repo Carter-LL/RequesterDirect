@@ -255,5 +255,23 @@ namespace RequesterDirect.Content.Controls
 
             return result;
         }
+
+        public void FullScreen()
+        {
+            Size previousSize = GetSize();
+            SetSize(Globals.WindowSize);
+            SetTopLevel(-100);
+            SetLocation(new Point(0, 0));
+            List<Frame> frames = Globals.Frames.FindAll(x => x.GetFollow() != null);
+            foreach (Frame frame in frames)
+            {
+                if (frame.GetFollow().GetHashCode().Equals(this.GetHashCode()))
+                {
+                    frame.SetSize(new Size(frame.GetSize().Width + (GetSize().Width - previousSize.Width), frame.GetSize().Height));
+                    frame.SetTopLevel(-101);
+                }
+            }
+            Globals.Frames.UpdateSort();
+        }
     }
 }

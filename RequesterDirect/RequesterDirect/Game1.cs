@@ -87,8 +87,6 @@ namespace RequesterDirect
             Globals.WindowSize = new Size(windowWidth, windowHeight);
 
             // Setup frame buffer.
-
-            _graphics.SynchronizeWithVerticalRetrace = true;
             _graphics.PreferredBackBufferWidth = windowWidth;
             _graphics.PreferredBackBufferHeight = windowHeight;
             _graphics.ApplyChanges();
@@ -128,7 +126,6 @@ namespace RequesterDirect
             base.LoadContent();
             Globals.Frames = new();
             Globals.Fonts = new();
-            Globals.DebugLabels = new();
             _drawController = new(new SpriteBatch(GraphicsDevice));
             _contentController = new(GraphicsDevice, Content);
             _updateController = new();
@@ -249,8 +246,6 @@ namespace RequesterDirect
             // Reset the render target to null to draw to the screen
             GraphicsDevice.SetRenderTarget(null);
 
-            // Draw the render target to the screen
-            GraphicsDevice.Clear(Color.Black); // Clear the screen to a solid color
 
             _drawController.GetSpriteBatch().Begin();
             _drawController.GetSpriteBatch().Draw(_renderTarget, Vector2.Zero, Color.White);

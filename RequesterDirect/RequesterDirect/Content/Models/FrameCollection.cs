@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using RequesterDirect.Content.Controls;
 using SharpDX.Direct3D9;
@@ -39,6 +40,19 @@ namespace RequesterDirect.Content.Models
             Frame item = this[index];
             base.RemoveItem(index);
             OnFrameRemoved(item);
+        }
+
+        public void RemoveAll(Frame rFrame)
+        {
+            List<Frame> frames = FindAll(x => x.GetFollow() != null);
+            foreach (Frame frame in frames)
+            {
+                if (frame.GetFollow().GetHashCode().Equals(rFrame.GetHashCode()))
+                {
+                    Remove(frame);
+                }
+            }
+            Remove(rFrame);
         }
 
         // Define your custom method to handle frame additions

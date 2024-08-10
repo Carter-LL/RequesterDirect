@@ -26,7 +26,19 @@ namespace RequesterDirect.Content.Views
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                HandleMousePress(mouseLocation);
+                //Verify mouse isnt located in the titlebar of windows
+                Rectangle rectangle = new Rectangle()
+                {
+                    X = 0,
+                    Y = 0,
+                    Width = Globals.WindowSize.Width,
+                    Height = Globals.WindowSize.Height - 30,
+                };
+
+                if (rectangle.Contains(mouseLocation))
+                {
+                    HandleMousePress(mouseLocation);
+                }
             }
             else
             {
